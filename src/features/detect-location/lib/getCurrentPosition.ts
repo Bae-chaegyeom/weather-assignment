@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 
 interface locationType {
     loaded : boolean;
-    coordinates?: {lat: number; lng: number};
+    coordinates?: {lat: number; lon: number};
     error?: {code: number; message: string};
 }
 
-export default function getCurrentPosition() {
+export function getCurrentPosition() {
     const [location, setLocation] =useState<locationType>({
         loaded: false,
     })
@@ -22,7 +22,7 @@ export default function getCurrentPosition() {
             loaded: true,
             coordinates: {
                 lat: location.coords.latitude,
-                lng: location.coords.longitude
+                lon: location.coords.longitude
             }
         })
     }
