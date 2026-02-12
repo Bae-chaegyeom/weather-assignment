@@ -1,0 +1,1 @@
+export {getCurrentPosition} from './lib/getCurrentPosition'
