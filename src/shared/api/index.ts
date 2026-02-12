@@ -1,0 +1,1 @@
+export {fetchCurrentWeather} from '../api/openweather/current'
