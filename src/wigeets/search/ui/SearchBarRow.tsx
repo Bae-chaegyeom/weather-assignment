@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {Input, IconButton} from '../../../shared/ui'
+import {Input} from '../../../shared/ui'
 import { searchDistricts } from '../../../shared/lib/districts/searchDistricts';
 interface Props {
   onSelect: (key: string) => void
