@@ -3,8 +3,11 @@ import { Container } from "../../../shared/ui";
 import { TopBar, SearchBarRow, HeroWeatherCard, ForecastCard, FavoritesSection } from "../../../wigeets";
 import { getCurrentPosition } from "../../../features/detect-location";
 import { fetchCurrentWeather } from "../../../shared/api";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+
   const location = getCurrentPosition();
   const coords = location.coordinates
     ? { lat: location.coordinates.lat, lon: location.coordinates.lon }
@@ -22,7 +25,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-slate-50">
       <Container>
         <TopBar />
-        <SearchBarRow />
+        <SearchBarRow onSelect={(key) => setSelectedKey(key)}/>
         {!location.loaded && (
           <div className="mb-4 rounded-2xl bg-white p-4 text-sm text-gray-600">
             📍 현재 위치 불러오는 중...
