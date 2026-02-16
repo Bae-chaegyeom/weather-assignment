@@ -20,6 +20,10 @@ interface OpenWeatherCurrent {
 		description: string;
 		icon: string;
 	}[];
+	sys: {
+		sunrise: number;
+		sunset: number;
+	};
 }
 
 export async function fetchCurrentWeather(lat: number, lon: number) {
