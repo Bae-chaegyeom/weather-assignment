@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+	/* brand */
+	--brand-500: #0094ad;
+	--brand-700: #28a0b5;
+	--brand-400: #24a1b4;
+
+	/* surfaces */
+	--surface: #ffffff;
+	--bg: #f5fbfc;
+
+	/* text */
+	--text-900: #1c1c1c;
+	--text-700: #313031;
+	--text-500: #8c8c8c;
+
+	/* border */
+	--border: #e2e2e2;
 }

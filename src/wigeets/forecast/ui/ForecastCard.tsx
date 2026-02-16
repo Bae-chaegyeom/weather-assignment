@@ -99,7 +99,7 @@ export default function ForecastCard({ forecast, isLoading, isError }: Props) {
 						onClick={() => setMode("temp")}
 						className={`rounded-full px-3 py-1 text-xs font-semibold ${
 							mode === "temp"
-								? "bg-sky-50 text-sky-700"
+								? "bg-[var(--brand-500)]/10 text-[var(--brand-500)]"
 								: "text-gray-500"
 						}`}>
 						Temperature
@@ -109,7 +109,7 @@ export default function ForecastCard({ forecast, isLoading, isError }: Props) {
 						onClick={() => setMode("humidity")}
 						className={`rounded-full px-3 py-1 text-xs font-semibold ${
 							mode === "humidity"
-								? "bg-sky-50 text-sky-700"
+								? "bg-[var(--brand-500)]/10 text-[var(--brand-500)]"
 								: "text-gray-500"
 						}`}>
 						Humidity
@@ -119,7 +119,7 @@ export default function ForecastCard({ forecast, isLoading, isError }: Props) {
 						onClick={() => setMode("feels")}
 						className={`rounded-full px-3 py-1 text-xs font-semibold ${
 							mode === "feels"
-								? "bg-sky-50 text-sky-700"
+								? "bg-[var(--brand-500)]/10 text-[var(--brand-500)]"
 								: "text-gray-500"
 						}`}>
 						Feels like

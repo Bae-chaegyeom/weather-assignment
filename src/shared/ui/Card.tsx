@@ -10,7 +10,7 @@ export default function Card({
 	return (
 		<div
 			onClick={onClick}
-			className={`rounded-2xl bg-white shadow-sm ring-1 ring-black/5 ${className}`}>
+			className={`rounded-2xl bg-white shadow-sm ring-1 ring-[var(--border)] ${className}`}>
 			{children}
 		</div>
 	);
