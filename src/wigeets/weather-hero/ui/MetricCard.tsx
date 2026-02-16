@@ -6,7 +6,7 @@ export default function MetricCard({
   unit,
 }: {
   label: string;
-  value: string;
+  value: number;
   unit?: string;
 }) {
   return (

@@ -1,10 +1,10 @@
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../../shared/ui";
 import { TopBar, SearchBarRow, HeroWeatherCard, ForecastCard, FavoritesSection } from "../../../wigeets";
 import { getCurrentPosition } from "../../../features/detect-location";
 import { fetchCurrentWeather } from "../../../shared/api";
-import { useState } from "react";
-import { getCoordsByKey, isCoordsMapReady } from "../../../shared/lib/districts/getCoordsByKey";
+import { getCoordsByKey, isCoordsMapReady, findNearestDistrictKey, formatDistrictKey } from "../../../shared/lib/districts"
 
 export default function HomePage() {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
@@ -22,6 +22,16 @@ export default function HomePage() {
   const coords = selectedCoords ?? geoCoords;
   const hasCoords = coords !== null;
   const canFetchWeather = hasCoords && !waitingMap && !notProvided;
+
+  const selectedLabel = selectedKey ? formatDistrictKey(selectedKey) : null;
+
+  const geoLabel = useMemo(() => {
+    if (!geoCoords) return null;
+    const nearest = findNearestDistrictKey(geoCoords.lat, geoCoords.lon);
+    return nearest ? formatDistrictKey(nearest) : "현재 위치";
+  }, [geoCoords?.lat, geoCoords?.lon]);
+
+  const cityLabel = selectedLabel ?? geoLabel ?? "현재 위치";
   
   const currentWeatherQuery = useQuery({
     queryKey: ["currentWeather", coords?.lat, coords?.lon],
@@ -73,10 +83,14 @@ export default function HomePage() {
         )}
         {location.loaded && !location.error && !waitingMap && !notProvided && currentWeatherQuery.data && (
           <HeroWeatherCard
-            city={currentWeatherQuery.data.name}
+            city={cityLabel}
             temp={Math.round(currentWeatherQuery.data.main.temp)}
             min={Math.round(currentWeatherQuery.data.main.temp_min)}
             max={Math.round(currentWeatherQuery.data.main.temp_max)}
+            humidity={currentWeatherQuery.data.main.humidity}
+            feels_like={Math.round(currentWeatherQuery.data.main.feels_like)}
+            wind={Math.round(currentWeatherQuery.data.wind.speed*3.6)}
+            clouds={currentWeatherQuery.data.clouds.all}
             description={currentWeatherQuery.data.weather?.[0]?.description ?? ""}
           />
         )}
