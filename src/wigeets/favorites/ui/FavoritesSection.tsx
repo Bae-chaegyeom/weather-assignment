@@ -48,7 +48,7 @@ export default function FavoritesSection({ onSelect }: Props) {
 		<div className="mb-4">
 			<div className="mb-3 flex items-center justify-between">
 				<div className="text-base font-semibold text-gray-900">
-					⭐ Favorites
+					⭐ 즐겨찾기
 				</div>
 
 				<button
@@ -59,7 +59,7 @@ export default function FavoritesSection({ onSelect }: Props) {
 				</button>
 			</div>
 
-			<div className="grid grid-cols-2 gap-3">
+			<div className="grid grid-cols-2 gap-3 md:grid-cols-3">
 				{favoritesWithCoords.map((f, idx) => {
 					const q = results[idx];
 

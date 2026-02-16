@@ -8,6 +8,7 @@ interface OpenWeatherCurrent {
 		temp_max: number;
 		humidity: number;
 		feels_like: number;
+		pressure: number;
 	};
 	wind: {
 		speed: number;
@@ -24,6 +25,7 @@ interface OpenWeatherCurrent {
 		sunrise: number;
 		sunset: number;
 	};
+	visibility: number;
 }
 
 export async function fetchCurrentWeather(lat: number, lon: number) {

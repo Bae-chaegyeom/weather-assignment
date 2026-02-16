@@ -10,7 +10,7 @@ import {
 	FavoritesSection,
 } from "../../../wigeets";
 import { getCurrentPosition } from "../../../features/detect-location";
-import { fetchCurrentWeather } from "../../../shared/api";
+import { fetchCurrentWeather, fetchForecast } from "../../../shared/api";
 import {
 	getCoordsByKey,
 	isCoordsMapReady,
@@ -57,7 +57,16 @@ export default function HomePage() {
 		staleTime: 1000 * 60 * 5,
 	});
 
+	const forecastQuery = useQuery({
+		queryKey: ["forecast", coords?.lat, coords?.lon],
+		queryFn: () => fetchForecast(coords!.lat, coords!.lon),
+		enabled: canFetchWeather,
+		staleTime: 1000 * 60 * 5,
+	});
+
 	const favorites = useFavoritesStore((s) => s.favorites);
+	const showHeroExtras = favorites.length >= 4;
+
 	//즐겨찾기 카드 이름 바꾼경우 찾기
 	const selectedFavoriteAlias = useMemo(() => {
 		if (!selectedKey) return null;
@@ -174,43 +183,88 @@ export default function HomePage() {
 					!waitingMap &&
 					!notProvided &&
 					currentWeatherQuery.data && (
-						<HeroWeatherCard
-							city={cityLabel}
-							temp={Math.round(
-								currentWeatherQuery.data.main.temp,
-							)}
-							min={Math.round(
-								currentWeatherQuery.data.main.temp_min,
-							)}
-							max={Math.round(
-								currentWeatherQuery.data.main.temp_max,
-							)}
-							humidity={currentWeatherQuery.data.main.humidity}
-							feels_like={Math.round(
-								currentWeatherQuery.data.main.feels_like,
-							)}
-							wind={Math.round(
-								currentWeatherQuery.data.wind.speed * 3.6,
-							)}
-							clouds={currentWeatherQuery.data.clouds.all}
-							description={
-								currentWeatherQuery.data.weather?.[0]
-									?.description ?? ""
-							}
-							isFavorite={favoriteIsFavorite}
-							onToggleFavorite={
-								canToggleFavorite
-									? handleToggleFavorite
-									: undefined
-							}
-						/>
+						<div className="md:grid md:grid-cols-[520px_1fr] md:gap-6 md:items-stretch">
+							<div className="flex flex-col gap-6">
+								<HeroWeatherCard
+									className="flex-1"
+									city={cityLabel}
+									temp={Math.round(
+										currentWeatherQuery.data.main.temp,
+									)}
+									min={Math.round(
+										currentWeatherQuery.data.main.temp_min,
+									)}
+									max={Math.round(
+										currentWeatherQuery.data.main.temp_max,
+									)}
+									humidity={
+										currentWeatherQuery.data.main.humidity
+									}
+									feels_like={Math.round(
+										currentWeatherQuery.data.main
+											.feels_like,
+									)}
+									wind={Math.round(
+										currentWeatherQuery.data.wind.speed *
+											3.6,
+									)}
+									clouds={currentWeatherQuery.data.clouds.all}
+									description={
+										currentWeatherQuery.data.weather?.[0]
+											?.description ?? ""
+									}
+									isFavorite={favoriteIsFavorite}
+									onToggleFavorite={
+										canToggleFavorite
+											? handleToggleFavorite
+											: undefined
+									}
+									pressure={
+										showHeroExtras
+											? currentWeatherQuery.data.main
+													.pressure
+											: undefined
+									}
+									visibilityKm={
+										showHeroExtras
+											? Math.round(
+													(currentWeatherQuery.data
+														.visibility ?? 0) /
+														1000,
+												)
+											: undefined
+									}
+									sunrise={
+										showHeroExtras
+											? currentWeatherQuery.data.sys
+													.sunrise
+											: undefined
+									}
+									sunset={
+										showHeroExtras
+											? currentWeatherQuery.data.sys
+													.sunset
+											: undefined
+									}
+								/>
+							</div>
+
+							<div className="space-y-6">
+								<ForecastCard
+									forecast={forecastQuery.data}
+									isLoading={forecastQuery.isLoading}
+									isError={forecastQuery.isError}
+								/>
+								<FavoritesSection
+									onSelect={(key) =>
+										navigate(
+											`/location/${encodeURIComponent(key)}`,
+										)
+									}
+								/>
+							</div>
+						</div>
 					)}
-				<ForecastCard />
-				<FavoritesSection
-					onSelect={(key) =>
-						navigate(`/location/${encodeURIComponent(key)}`)
-					}
-				/>
 			</Container>
 		</div>
 	);
