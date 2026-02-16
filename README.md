@@ -7,7 +7,7 @@
 
 ## 🚀 배포 주소
 
-[http](https://weather.haebae.co.kr/)
+https://weather.haebae.co.kr/
 
 ---
 
