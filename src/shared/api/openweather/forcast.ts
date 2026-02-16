@@ -4,7 +4,11 @@ export interface OpenWeatherForecast {
 	list: {
 		dt: number;
 		dt_txt: string;
-		main: { temp: number };
+		main: {
+			temp: number;
+			feels_like: number;
+			humidity: number;
+		};
 		weather: { description: string; icon: string }[];
 	}[];
 }
