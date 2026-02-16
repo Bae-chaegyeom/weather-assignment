@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../../shared/ui";
 import { TopBar, SearchBarRow, HeroWeatherCard, ForecastCard, FavoritesSection } from "../../../wigeets";
@@ -8,10 +8,8 @@ import { getCoordsByKey, isCoordsMapReady, findNearestDistrictKey, formatDistric
 import { useFavoritesStore } from "../../../entities/favorites";
 
 export default function HomePage() {
-  const count = useFavoritesStore((s) => s.favorites.length);
-  const add = useFavoritesStore((s) => s.addFavorite);
-  const clear = useFavoritesStore((s) => s.clearFavorites);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [favoriteMessage, setFavoriteMessage] = useState<string | null>(null);
   
   const location = getCurrentPosition();
   const selectedCoords = selectedKey ? getCoordsByKey(selectedKey) : null;
@@ -29,11 +27,15 @@ export default function HomePage() {
 
   const selectedLabel = selectedKey ? formatDistrictKey(selectedKey) : null;
 
-  const geoLabel = useMemo(() => {
+  const geoKey = useMemo(() => {
     if (!geoCoords) return null;
-    const nearest = findNearestDistrictKey(geoCoords.lat, geoCoords.lon);
-    return nearest ? formatDistrictKey(nearest) : "현재 위치";
+    return findNearestDistrictKey(geoCoords.lat, geoCoords.lon);
   }, [geoCoords?.lat, geoCoords?.lon]);
+
+  const geoLabel = useMemo(() => {
+    if (!geoKey) return "현재 위치";
+    return formatDistrictKey(geoKey);
+  }, [geoKey]);
 
   const cityLabel = selectedLabel ?? geoLabel ?? "현재 위치";
   
@@ -43,24 +45,45 @@ export default function HomePage() {
     enabled: canFetchWeather,
     staleTime: 1000 * 60 * 5,
   });
+  
+  const favorites = useFavoritesStore((s) => s.favorites);
+  const addFavorite = useFavoritesStore((s) => s.addFavorite);
+  const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
+  const isFavorite = useFavoritesStore((s) => s.isFavorite);
+  
+  const favoriteKey = selectedKey ?? geoKey;
+  const canToggleFavorite = favoriteKey !== null;
+  const favoriteIsFavorite = canToggleFavorite ? isFavorite(favoriteKey!) : false;
+  
+
+  function handleToggleFavorite() {
+    if (!favoriteKey) return;
+
+    if (isFavorite(favoriteKey)) {
+      removeFavorite(favoriteKey);
+      setFavoriteMessage("즐겨찾기에서 삭제했어요.");
+      return;
+    }
+
+    const result = addFavorite(favoriteKey);
+    if (result === "added") setFavoriteMessage("즐겨찾기에 추가했어요.");
+    if (result === "duplicate") setFavoriteMessage("이미 즐겨찾기에 있어요.");
+    if (result === "limit") setFavoriteMessage("즐겨찾기는 최대 6개까지 추가할 수 있어요.");
+  }
+  //알림이 2초뒤에 사라지게 
+  useEffect(() => {
+    if (!favoriteMessage) return;
+
+    const timer = setTimeout(() => {
+      setFavoriteMessage(null);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [favoriteMessage]);
+
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="mt-2 flex gap-2">
-  <button
-    className="rounded bg-black px-3 py-1 text-white"
-    onClick={() => add("서울특별시-종로구-청운동")}
-  >
-    add test
-  </button>
-  <button
-    className="rounded bg-gray-200 px-3 py-1"
-    onClick={() => clear()}
-  >
-    clear
-  </button>
-  <div className="text-xs text-gray-500">favorites: {count}</div>
-</div>
       <Container>
         <TopBar />
         <SearchBarRow onSelect={(key) => setSelectedKey(key)}/>
@@ -100,6 +123,11 @@ export default function HomePage() {
             날씨 조회에 실패했습니다.
           </div>
         )}
+        {location.loaded && !location.error && !waitingMap && !notProvided && favoriteMessage && (
+          <div className="mb-2 rounded-xl bg-slate-100 p-3 text-sm text-slate-700">
+            {favoriteMessage}
+          </div>
+        )}
         {location.loaded && !location.error && !waitingMap && !notProvided && currentWeatherQuery.data && (
           <HeroWeatherCard
             city={cityLabel}
@@ -111,6 +139,8 @@ export default function HomePage() {
             wind={Math.round(currentWeatherQuery.data.wind.speed*3.6)}
             clouds={currentWeatherQuery.data.clouds.all}
             description={currentWeatherQuery.data.weather?.[0]?.description ?? ""}
+            isFavorite={favoriteIsFavorite}
+            onToggleFavorite={canToggleFavorite ? handleToggleFavorite : undefined}
           />
         )}
         <ForecastCard />
