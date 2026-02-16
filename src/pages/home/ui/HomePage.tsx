@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Container } from "../../../shared/ui";
 import {
@@ -21,6 +22,8 @@ import { useFavoritesStore } from "../../../entities/favorites";
 export default function HomePage() {
 	const [selectedKey, setSelectedKey] = useState<string | null>(null);
 	const [favoriteMessage, setFavoriteMessage] = useState<string | null>(null);
+
+	const navigate = useNavigate();
 
 	const location = getCurrentPosition();
 	const selectedCoords = selectedKey ? getCoordsByKey(selectedKey) : null;
@@ -66,6 +69,7 @@ export default function HomePage() {
 		? (selectedFavoriteAlias ?? formatDistrictKey(selectedKey))
 		: null;
 	const cityLabel = selectedLabel ?? geoLabel ?? "현재 위치";
+
 	const addFavorite = useFavoritesStore((s) => s.addFavorite);
 	const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
 	const isFavorite = useFavoritesStore((s) => s.isFavorite);
@@ -202,7 +206,11 @@ export default function HomePage() {
 						/>
 					)}
 				<ForecastCard />
-				<FavoritesSection onSelect={(key) => setSelectedKey(key)} />
+				<FavoritesSection
+					onSelect={(key) =>
+						navigate(`/location/${encodeURIComponent(key)}`)
+					}
+				/>
 			</Container>
 		</div>
 	);
