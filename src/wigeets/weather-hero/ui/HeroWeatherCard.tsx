@@ -5,10 +5,14 @@ interface Props {
   temp: number;
   min: number;
   max: number;
+  humidity: number;
+  wind: number;
+  clouds: number;
+  feels_like: number;
   description: string;
 }
 
-export default function HeroWeatherCard({city, temp, min, max, description}:Props) {
+export default function HeroWeatherCard({city, temp, min, max, description,humidity,wind,clouds,feels_like }:Props) {
   const minMax = `H: ${max}°  L: ${min}°`;
   // // mock데이터
   // const city = "Seoul, South Korea";
@@ -20,7 +24,7 @@ export default function HeroWeatherCard({city, temp, min, max, description}:Prop
 
   return (
     <div className="mb-4 rounded-3xl bg-gradient-to-b from-sky-500 to-cyan-600 p-5 text-white shadow-sm">
-      <div className="text-sm font-semibold opacity-95">📍 {city}</div>
+      <div className="text-sm font-semibold opacity-95">{city}</div>
       <div className="mt-1 text-xs text-white/80">{new Date().toLocaleDateString("ko-KR", { weekday:"long", year:"numeric", month:"long", day:"numeric" })}</div>
 
       <div className="mt-5 flex items-end justify-between">
@@ -32,10 +36,10 @@ export default function HeroWeatherCard({city, temp, min, max, description}:Prop
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3">
-        <MetricCard label="습도" value="62" unit="%" />
-        <MetricCard label="풍속" value="12" unit="km/h" />
-        <MetricCard label="체감온도" value="13" unit="°" />
-        <MetricCard label="자외선 지수" value="Low 2" />
+        <MetricCard label="습도" value={humidity} unit="%" />
+        <MetricCard label="풍속" value={wind} unit="km/h" />
+        <MetricCard label="체감온도" value={feels_like} unit="°" />
+        <MetricCard label="구름량" value={clouds} unit="%" />
       </div>
     </div>
   );

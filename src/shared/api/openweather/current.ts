@@ -12,6 +12,9 @@ interface OpenWeatherCurrent {
     wind: {
         speed: number;
     }
+    clouds:{
+        all: number;
+    }
     weather:{
         main: string;
         description: string;
