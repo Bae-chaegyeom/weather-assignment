@@ -88,6 +88,7 @@ Background: #F5FBFC
 CSS 변수 기반으로 색상을 관리하여 유지보수성을 높였습니다.
 
 기술적 의사결정
+
 1️⃣ TanStack Query 사용
 
 API 캐싱 및 상태 관리
