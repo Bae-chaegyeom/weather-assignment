@@ -32,6 +32,7 @@ VITE_OPENWEATHER_API_KEY=your_api_key
 npm run dev
 
 주요 기능
+
 1️⃣ 현재 위치 기반 날씨 조회
 
 브라우저 Geolocation API를 사용하여 현재 위치 감지
@@ -116,7 +117,6 @@ md: 조건부 클래스 사용
 Hero 확장 대응 레이아웃 설계
 
 📦 사용 기술
-
 React
 TypeScript
 Vite
@@ -125,12 +125,10 @@ TanStack Query
 OpenWeather API
 
 📌 개선 가능 사항
-
 다크 모드 지원
 차트 인터랙션(hover tooltip) 추가
 
 📄 라이선스
-
 본 프로젝트는 과제 제출 목적의 프로젝트입니다.
 
 ```
