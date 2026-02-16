@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
 	getCoordsByKey,
@@ -12,12 +12,6 @@ export default function LocationPage() {
 	const key = id ? decodeURIComponent(id) : null;
 	const coords = key ? getCoordsByKey(key) : null;
 	const navigate = useNavigate();
-
-	const formatTime = (unix: number) =>
-		new Date(unix * 1000).toLocaleTimeString("ko-KR", {
-			hour: "numeric",
-			minute: "2-digit",
-		});
 
 	const currentWeatherQuery = useQuery({
 		queryKey: ["currentWeather", coords?.lat, coords?.lon],
@@ -42,7 +36,7 @@ export default function LocationPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-slate-50">
+		<div className="min-h-screen bg-[var(--bg)]">
 			<div className="mx-auto w-full max-w-md px-4 py-4 md:max-w-6xl">
 				<div className="mb-4 flex items-center gap-3">
 					<button
@@ -165,7 +159,7 @@ export default function LocationPage() {
 											return (
 												<div
 													key={it.dt}
-													className="min-w-[72px] snap-start rounded-2xl bg-slate-50 p-3 text-center">
+													className="min-w-[72px] snap-start rounded-2xl bg-[var(--bg)] p-3 text-center">
 													<div className="text-[10px] font-semibold text-gray-500">
 														{hour}
 													</div>
@@ -195,7 +189,7 @@ export default function LocationPage() {
 								</div>
 
 								<div className="mt-3 grid grid-cols-2 gap-3">
-									<div className="rounded-2xl bg-slate-50 p-4">
+									<div className="rounded-2xl bg-[var(--bg)] p-4">
 										<div className="text-[10px] font-semibold text-gray-500">
 											일출
 										</div>
@@ -210,7 +204,7 @@ export default function LocationPage() {
 										</div>
 									</div>
 
-									<div className="rounded-2xl bg-slate-50 p-4">
+									<div className="rounded-2xl bg-[var(--bg)] p-4">
 										<div className="text-[10px] font-semibold text-gray-500">
 											일몰
 										</div>

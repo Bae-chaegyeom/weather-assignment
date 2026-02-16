@@ -45,7 +45,7 @@ export default function HeroWeatherCard({
 		});
 	return (
 		<div
-			className={`relative mb-4 rounded-3xl bg-gradient-to-b from-sky-500 to-cyan-600 p-5 text-white shadow-sm ${className ?? ""}`}>
+			className={`relative mb-4 rounded-3xl bg-gradient-to-b from-[var(--brand-500)] to-[var(--brand-700)] p-5 text-white shadow-sm ${className ?? ""}`}>
 			<div className="text-sm font-semibold opacity-95">{city}</div>
 			{onToggleFavorite && (
 				<button

@@ -116,13 +116,8 @@ export default function HomePage() {
 		return () => clearTimeout(timer);
 	}, [favoriteMessage]);
 
-	//즐겨찾기 선택
-	function handleSelectFavorite(key: string) {
-		setSelectedKey(key);
-	}
-
 	return (
-		<div className="min-h-screen bg-slate-50">
+		<div className="min-h-screen bg-[var(--bg)]">
 			<Container>
 				<TopBar />
 				<SearchBarRow onSelect={(key) => setSelectedKey(key)} />
