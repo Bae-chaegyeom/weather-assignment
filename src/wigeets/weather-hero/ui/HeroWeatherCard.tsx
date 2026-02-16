@@ -14,14 +14,6 @@ interface Props {
 
 export default function HeroWeatherCard({city, temp, min, max, description,humidity,wind,clouds,feels_like }:Props) {
   const minMax = `H: ${max}°  L: ${min}°`;
-  // // mock데이터
-  // const city = "Seoul, South Korea";
-  // const date = "Monday, 23 October";
-  // const temp = "14";
-  // const desc = "Partly Cloudy";
-  // const minMax = "H: 16°  L: 9°";
-
-
   return (
     <div className="mb-4 rounded-3xl bg-gradient-to-b from-sky-500 to-cyan-600 p-5 text-white shadow-sm">
       <div className="text-sm font-semibold opacity-95">{city}</div>

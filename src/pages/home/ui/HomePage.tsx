@@ -5,8 +5,12 @@ import { TopBar, SearchBarRow, HeroWeatherCard, ForecastCard, FavoritesSection }
 import { getCurrentPosition } from "../../../features/detect-location";
 import { fetchCurrentWeather } from "../../../shared/api";
 import { getCoordsByKey, isCoordsMapReady, findNearestDistrictKey, formatDistrictKey } from "../../../shared/lib/districts"
+import { useFavoritesStore } from "../../../entities/favorites";
 
 export default function HomePage() {
+  const count = useFavoritesStore((s) => s.favorites.length);
+  const add = useFavoritesStore((s) => s.addFavorite);
+  const clear = useFavoritesStore((s) => s.clearFavorites);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   
   const location = getCurrentPosition();
@@ -42,6 +46,21 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      <div className="mt-2 flex gap-2">
+  <button
+    className="rounded bg-black px-3 py-1 text-white"
+    onClick={() => add("서울특별시-종로구-청운동")}
+  >
+    add test
+  </button>
+  <button
+    className="rounded bg-gray-200 px-3 py-1"
+    onClick={() => clear()}
+  >
+    clear
+  </button>
+  <div className="text-xs text-gray-500">favorites: {count}</div>
+</div>
       <Container>
         <TopBar />
         <SearchBarRow onSelect={(key) => setSelectedKey(key)}/>
