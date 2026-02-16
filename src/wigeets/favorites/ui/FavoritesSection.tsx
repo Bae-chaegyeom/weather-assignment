@@ -1,11 +1,20 @@
+import { useState } from "react";
 import { useQueries } from "@tanstack/react-query";
 import { fetchCurrentWeather } from "../../../shared/api";
 import FavoriteCard from "./FavoriteCard";
 import { useFavoritesStore } from "../../../entities/favorites";
 import { getCoordsByKey } from "../../../shared/lib/districts";
 
-export default function FavoritesSection() {
+interface Props {
+	onSelect?: (key: string) => void;
+}
+
+export default function FavoritesSection({ onSelect }: Props) {
+	const [isEditing, setIsEditing] = useState(false);
+
 	const favorites = useFavoritesStore((s) => s.favorites);
+	const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
+	const updateAlias = useFavoritesStore((s) => s.updateAlias);
 
 	const favoritesWithCoords = favorites.map((f) => ({
 		...f,
@@ -41,6 +50,13 @@ export default function FavoritesSection() {
 				<div className="text-base font-semibold text-gray-900">
 					⭐ Favorites
 				</div>
+
+				<button
+					type="button"
+					onClick={() => setIsEditing((v) => !v)}
+					className="text-sm font-semibold text-sky-600">
+					{isEditing ? "완료" : "편집"}
+				</button>
 			</div>
 
 			<div className="grid grid-cols-2 gap-3">
@@ -55,6 +71,11 @@ export default function FavoritesSection() {
 								name={f.alias}
 								subtitle={f.key.replaceAll("-", " ")}
 								state="unsupported"
+								isEditing={isEditing}
+								onChangeAlias={(val) => updateAlias(f.key, val)}
+								fallbackAlias={
+									f.key.split("-").pop() ?? f.alias
+								}
 							/>
 						);
 					}
@@ -66,6 +87,12 @@ export default function FavoritesSection() {
 								name={f.alias}
 								subtitle={f.key.replaceAll("-", " ")}
 								state="loading"
+								onClick={() => onSelect?.(f.key)}
+								isEditing={isEditing}
+								onChangeAlias={(val) => updateAlias(f.key, val)}
+								fallbackAlias={
+									f.key.split("-").pop() ?? f.alias
+								}
 							/>
 						);
 					}
@@ -77,6 +104,11 @@ export default function FavoritesSection() {
 								name={f.alias}
 								subtitle={f.key.replaceAll("-", " ")}
 								state="error"
+								isEditing={isEditing}
+								onChangeAlias={(val) => updateAlias(f.key, val)}
+								fallbackAlias={
+									f.key.split("-").pop() ?? f.alias
+								}
 							/>
 						);
 					}
@@ -93,6 +125,11 @@ export default function FavoritesSection() {
 							max={Math.round(data.main.temp_max)}
 							status={data.weather?.[0]?.description ?? ""}
 							icon={data.weather?.[0]?.icon}
+							isEditing={isEditing}
+							onChangeAlias={(val) => updateAlias(f.key, val)}
+							onClick={() => onSelect?.(f.key)}
+							onRemove={() => removeFavorite(f.key)}
+							fallbackAlias={f.key.split("-").pop() ?? f.alias}
 						/>
 					);
 				})}
